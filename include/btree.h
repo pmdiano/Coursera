@@ -46,6 +46,12 @@ public:
 	BTreeNode<T>* rightChild() const { return _right; }
 	void setLeftChild(BTreeNode<T>* l) { _left = l; }
 	void setRightChild(BTreeNode<T>* r) { _right = r; }
+
+	int height() {
+		int leftHeight = _left ? _left->height() : 0;
+		int rightHeight = _right ? _right->height() : 0;
+		return leftHeight > rightHeight ? (leftHeight + 1) : (rightHeight + 1);
+	}
 };
 
 template<class T>
