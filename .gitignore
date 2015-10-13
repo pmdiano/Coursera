@@ -1,0 +1,10 @@
+# Object files
+*.o
+*.out
+*.ko
+*.obj
+*.elf
+
+# Ocasionally on Windows
+*.exe
+*.pdb
