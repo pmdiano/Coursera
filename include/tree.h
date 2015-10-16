@@ -2,13 +2,14 @@
 //
 //  File:       tree.h
 //
-//  Synopsis:   Implemented a minimal tree with leftchild/rightsibling
+//  Synopsis:   Implemented a minimal tree with leftChild/nextSibling
 //
 //  Author:     Qirong Ma, 10/15/2015
 //
 //------------------------------------------------------------------------------
 #pragma once
 #include <queue>
+#include <stack>
 #ifndef nullptr
 #define nullptr 0
 #endif
@@ -101,5 +102,43 @@ public:
 				node = node->nextSibling();
 			}
 		}
+	}
+
+	void mirror() {
+		TreeNode<T> *father, *node, *child, *sibling;
+		std::stack<TreeNode<T>*> stk;
+		std::queue<TreeNode<T>*> q;
+
+		// virtual father
+		father = new TreeNode<T>(_root->value());
+		father->setChild(_root);
+		q.push(father);
+
+		while (!q.empty()) {
+			node = q.front();
+			q.pop();
+
+			child = node->leftChild();
+			if (!child)
+				continue;
+			while (child) {
+				q.push(child);
+				stk.push(child);
+				child = child->nextSibling();
+			}
+
+			child = stk.top();
+			stk.pop();
+			node->setChild(child);
+			while (!stk.empty()) {
+				child->setSibling(stk.top());
+				child = stk.top();
+				stk.pop();
+			}
+			child->setSibling(nullptr);
+		}
+
+		_root = father->leftChild();
+		delete father;
 	}
 };

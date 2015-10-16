@@ -1,6 +1,6 @@
 //+-----------------------------------------------------------------------------
 //
-//  File:       degreelevel.h
+//  File:       degreelevel.cpp
 //
 //  Synopsis:   Input degree-width representation of a forest, output its
 //              root last traversal.
