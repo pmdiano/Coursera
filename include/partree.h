@@ -20,7 +20,7 @@ private:
 	int _count;
 
 public:
-	ParTreeNode(): _value(0), _parent(nullptr), _count(1) {}
+	ParTreeNode(): _parent(nullptr), _count(1) {}
 	virtual ~ParTreeNode() {}
 
 	T value() {return _value;}
@@ -39,7 +39,10 @@ public:
 	ParTreeNode<T>* array;
 	int size;
 
-	ParTree(const int s): size(s), array(new ParTreeNode<T>[s]) {}
+	ParTree(const int s, const T& val): size(s), array(new ParTreeNode<T>[s]) {
+		for (int i = 0; i < s; i++)
+			array[i].setValue(val);
+	}
 	virtual ~ParTree() {delete[] array;}
 
 	ParTreeNode<T>* Find(ParTreeNode<T>* node) const {
