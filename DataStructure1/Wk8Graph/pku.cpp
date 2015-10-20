@@ -1,3 +1,12 @@
+//+-----------------------------------------------------------------------------
+//
+//  File:       pku.cpp
+//
+//  Synopsis:   Finding shortest path using Dijkstra and Floyd algorithm
+//
+//  Author:     Qirong Ma, 10/19/2015
+//
+//------------------------------------------------------------------------------
 #include <cstdio>
 #include <cstring>
 #include <stack>
@@ -18,7 +27,7 @@ struct Dist {
 	int pre;
 	bool operator<(const Dist& rhs) const {return length < rhs.length;}
 	bool operator>(const Dist& rhs) const {return length > rhs.length;}
-} D[NODE];
+} D[NODE], FD[NODE][NODE];
 
 void findidx(char* name1, char* name2, int* id1, int* id2) {
 	for (int j = 0; j < P; j++) {
@@ -78,8 +87,55 @@ void dijkstra(int id1, int id2) {
 	printf("\n");
 }
 
+void floyd() {
+	for (int i = 0; i < P; i++) {
+		for (int j = 0; j < P; j++) {
+			if (i == j) {
+				FD[i][j].length = 0;
+				FD[i][j].pre = i;
+			}
+			else if (G[i][j]) {
+				FD[i][j].length = G[i][j];
+				FD[i][j].pre = i;
+			}
+			else {
+				FD[i][j].length = INFINITE;
+				FD[i][j].pre = -1;
+			}
+		}
+	}
+
+	for (int k = 0; k < P; k++) {
+		for (int i = 0; i < P; i++) {
+			for (int j = 0; j < P; j++) {
+				if (FD[i][k].length + FD[k][j].length < FD[i][j].length) {
+					FD[i][j].length = FD[i][k].length + FD[k][j].length;
+					FD[i][j].pre = FD[k][j].pre;
+				}
+			}
+		}
+	}
+}
+
+void floyd_output(int id1, int id2) {
+	stack<int> path;
+	while (id2 != id1) {
+		path.push(id2);
+		id2 = FD[id1][id2].pre;
+	}
+	path.push(id1);
+
+	while (true) {
+		id1 = path.top();
+		path.pop();
+		printf("%s", name[id1]);
+		if (path.empty()) break;
+		printf("->(%d)->", G[id1][path.top()]);
+	}
+	printf("\n");
+}
+
 int main() {
-	freopen("in1.txt", "r", stdin);
 	int e, id1, id2, ncase;
 	char name1[NAMELEN+1], name2[NAMELEN+1];
 
@@ -93,16 +149,19 @@ int main() {
 	for (int i = 0; i < Q; i++) {
 		scanf("%s %s %d", name1, name2, &e);
 		findidx(name1, name2, &id1, &id2);
-		if (!G[id1][id2] || G[id1][id2] > e) {
+		if (!G[id1][id2] || G[id1][id2] > e) { // The input is a bit weird
 			G[id1][id2] = e;
 			G[id2][id1] = e;
 		}
 	}
 
+	floyd();
+
 	scanf("%d", &ncase);
 	for (int i = 0; i < ncase; i++) {
 		scanf("%s %s", name1, name2);
 		findidx(name1, name2, &id1, &id2);
-		dijkstra(id1, id2);
+		//dijkstra(id1, id2);
+		floyd_output(id1, id2);
 	}
 }
