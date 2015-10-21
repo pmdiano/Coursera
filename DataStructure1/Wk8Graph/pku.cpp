@@ -9,8 +9,8 @@
 //------------------------------------------------------------------------------
 #include <cstdio>
 #include <cstring>
+#include <queue>
 #include <stack>
-#include "../../include/minheap.h"
 using namespace std;
 
 const int NODE = 30;
@@ -25,8 +25,7 @@ struct Dist {
 	int index;
 	int length;
 	int pre;
-	bool operator<(const Dist& rhs) const {return length < rhs.length;}
-	bool operator>(const Dist& rhs) const {return length > rhs.length;}
+	bool operator<(const Dist& rhs) const {return length > rhs.length;}
 } D[NODE], FD[NODE][NODE];
 
 void findidx(char* name1, char* name2, int* id1, int* id2) {
@@ -44,29 +43,20 @@ void dijkstra(int id1, int id2) {
 		D[i].index = i; D[i].length = INFINITE; D[i].pre = id1;
 	}
 	D[id1].length = 0;
-	MinHeap<Dist> H(Q);
-	H.Insert(D[id1]);
+	priority_queue<Dist> q;
+	q.push(D[id1]);
 
-	for (int i = 0; i < P; i++) {
-		bool found = false;
-		Dist d;
-		while (H.size()) {
-			d = H.RemoveMin();
-			if (!visited[d.index]) {
-				found = true; break;
+	Dist d;
+	while (!q.empty()) {
+		d = q.top(); q.pop();
+		if (d.index == id2) break;
+		for (int j = 0; j < P; j++) {
+			if (G[d.index][j] && d.length + G[d.index][j] < D[j].length) {
+				D[j].length = d.length + G[d.index][j];
+				D[j].pre = d.index;
+				q.push(D[j]);
 			}
 		}
-		if (!found) {
-			break;
-		}
-		int v = d.index;
-		visited[v] = 1;
-		for (int j = 0; j < P; j++)
-			if (!visited[j] && G[v][j] && D[j].length > (D[v].length + G[v][j])) {
-				D[j].length = D[v].length + G[v][j];
-				D[j].pre = v;
-				H.Insert(D[j]);
-			}
 	}
 
 	stack<int> path;
