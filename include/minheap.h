@@ -18,6 +18,7 @@ private:
 	T* _array;
 	int _currentSize;
 	int _maxSize;
+	bool _outsideData;
 
 	void SiftUp(int pos) {
 		T temp = _array[pos];
@@ -48,11 +49,17 @@ private:
 	}
 
 public:
-	MinHeap(const int n) : _array(nullptr), _currentSize(0), _maxSize(n) {
+	MinHeap(const int n) : _array(nullptr), _currentSize(0), _maxSize(n), _outsideData(false) {
 		_array = new T[n];
 	}
+	MinHeap(T* data, const int n): _array(data), _currentSize(n), _maxSize(n), _outsideData(true)
+	{
+		for (int i = _currentSize / 2; i >= 0; i--)
+			SiftDown(i);
+	}
 	virtual ~MinHeap() {
-		delete[] _array;
+		if (!_outsideData)
+			delete[] _array;
 	}
 
 	int size() const {return _currentSize;}
@@ -74,7 +81,8 @@ public:
 		if (pos<0 || pos>=_currentSize)
 			return false;
 		T temp = _array[pos];
-		_array[pos] = _array[--_currentSize];
+		_array[pos] = _array[_currentSize-1];
+		_array[--_currentSize] = temp;
 		if (pos > 0 && _array[parent(pos)] > _array[pos])
 			SiftUp(pos);
 		else
