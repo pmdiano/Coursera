@@ -109,3 +109,26 @@ void heapSort(T* data, int n) {
 	for (int i = 0; i < n-1; i++)
 		(void)heap.RemoveMin();
 }
+
+template<class T>
+void merge(T* data, T* temp, int n, int mid) {
+	int i, l, r;
+	for (i = 0; i < mid; i++)
+		temp[i] = data[i];
+	for (; i < n; i++)
+		temp[i] = data[mid+n-1-i];
+	for (l = 0, r = n-1, i = 0; i < n;)
+		if (temp[r] < temp[l])
+			data[i++] = temp[r--];
+		else
+			data[i++] = temp[l++];
+}
+
+// Stable
+template<class T>
+void mergeSort(T* data, T* temp, int n) {
+	if (n <= 1) return;
+	mergeSort(data, temp, n/2);
+	mergeSort(data+n/2, temp+n/2, n-n/2);
+	merge(data, temp, n, n/2);
+}
