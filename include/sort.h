@@ -17,6 +17,27 @@ inline void _swap(T& v1, T& v2) {
 	v2 = temp;
 }
 
+// Assuming data is non-increasingly sorted
+// Return: one index where data[index] equal to val, -1 if not found
+template<class T>
+int binarySearch(T* data, int n, const T& val) {
+	int l, r, mid;
+	l = 0, r = n-1, mid = (l+r)/2;
+	while (l <= r) {
+		if (val == data[mid])
+			return mid;
+		else if (val < data[mid]) {
+			r = mid-1;
+			mid = (l+r)/2;
+		}
+		else {
+			l = mid+1;
+			mid = (l+r)/2;
+		}
+	}
+	return -1;
+}
+
 // Stable
 template<class T>
 void insertionSort(T* data, int n) {
