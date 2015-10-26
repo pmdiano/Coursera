@@ -1,6 +1,6 @@
 //+-----------------------------------------------------------------------------
 //
-//  File:       dict.h
+//  File:       dict.cpp
 //
 //  Synopsis:   Simple dictionary using ELF hash function (a.k.a. PJW hash)
 //              https://www.coursera.org/learn/gaoji-shuju-jiegou/programming
