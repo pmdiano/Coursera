@@ -1,2 +1,2 @@
 # Coursera
-Assignments (mostly code) for my Coursera courses.
+Some Coursera classes.
