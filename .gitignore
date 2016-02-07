@@ -5,6 +5,9 @@
 *.obj
 *.elf
 
-# Ocasionally on Windows
+# Windows
 *.exe
 *.pdb
+
+# Other
+*.pdf
